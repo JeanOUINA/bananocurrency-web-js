@@ -21,7 +21,7 @@ export default class AddressGenerator {
 	}
 
 	/**
-	 * Generates a legacy Nano wallet
+	 * Generates a legacy Banano wallet
 	 *
 	 */
 	generateLegacyWallet(seed?: string): Wallet {
@@ -31,5 +31,4 @@ export default class AddressGenerator {
 
 		return wallet
 	}
-
 }

@@ -1,19 +1,19 @@
 {
-	"name": "nanocurrency-web",
+	"name": "bananocurrency-web",
 	"version": "1.3.2",
-	"description": "Toolkit for Nano cryptocurrency client side offline integrations",
+	"description": "Toolkit for Banano cryptocurrency client side offline integrations",
 	"author": "Miro Metsänheimo <miro@metsanheimo.fi>",
 	"license": "MIT",
-	"homepage": "https://github.com/numsu/nanocurrency-web-js#readme",
+	"homepage": "https://github.com/jeanouina/bananocurrency-web-js#readme",
 	"repository": {
 		"type": "git",
-		"url": "git+https://github.com/numsu/nanocurrency-web-js.git"
+		"url": "git+https://github.com/jeanouina/bananocurrency-web-js.git"
 	},
 	"bugs": {
-		"url": "https://github.com/numsu/nanocurrency-web-js/issues"
+		"url": "https://github.com/jeanouina/bananocurrency-web-js/issues"
 	},
 	"keywords": [
-		"nano",
+		"banano",
 		"currency",
 		"mnemonic",
 		"crypto",

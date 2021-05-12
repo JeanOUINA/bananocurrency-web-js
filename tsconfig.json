@@ -9,9 +9,6 @@
 		"downlevelIteration": true,
 		"strictNullChecks": false,
 		"forceConsistentCasingInFileNames": true,
-		"types": [
-			"node"
-		],
 		"lib": [
 			"es2017"
 		]

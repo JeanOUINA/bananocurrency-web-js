@@ -43,7 +43,7 @@ export default class Bip39Mnemonic {
 	}
 
 	/**
-	 * Creates an old Nano wallet
+	 * Creates an old Banano wallet
 	 *
 	 * @param {string} seed - (Optional) the seed to be used for the wallet
 	 * @returns {MnemonicSeed} The mnemonic phrase and a generated seed if none provided
@@ -132,7 +132,7 @@ export default class Bip39Mnemonic {
 	}
 
 	/**
-	 * Converts the mnemonic phrase to an old Nano seed
+	 * Converts the mnemonic phrase to an old Banano seed
 	 *
 	 * @param {string} mnemonic Mnemonic phrase separated by spaces
 	 */

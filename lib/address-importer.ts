@@ -1,7 +1,7 @@
 import Bip32KeyDerivation from './bip32-key-derivation'
 import Bip39Mnemonic from './bip39-mnemonic'
 import Ed25519 from './ed25519'
-import NanoAddress from './nano-address'
+import BananoAddress from './banano-address'
 import Signer from './signer'
 import Convert from './util/convert'
 
@@ -123,8 +123,8 @@ export default class AddressImporter {
 			const ed25519 = new Ed25519()
 			const keyPair = ed25519.generateKeys(privateKey)
 
-			const nano = new NanoAddress()
-			const address = nano.deriveAddress(keyPair.publicKey)
+			const banano = new BananoAddress()
+			const address = banano.deriveAddress(keyPair.publicKey)
 
 			accounts.push({
 				accountIndex: i,
@@ -153,8 +153,8 @@ export default class AddressImporter {
 			const ed25519 = new Ed25519()
 			const keyPair = ed25519.generateKeys(privateKey)
 
-			const nano = new NanoAddress()
-			const address = nano.deriveAddress(keyPair.publicKey)
+			const banano = new BananoAddress()
+			const address = banano.deriveAddress(keyPair.publicKey)
 
 			accounts.push({
 				accountIndex: i,

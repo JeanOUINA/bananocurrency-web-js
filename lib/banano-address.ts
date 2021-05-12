@@ -3,21 +3,21 @@ import { blake2b } from 'blakejs'
 
 import Convert from './util/convert'
 
-export default class NanoAddress {
+export default class BananoAddress {
 
 	readonly alphabet = '13456789abcdefghijkmnopqrstuwxyz'
-	readonly prefix = 'nano_'
+	readonly prefix = 'ban_'
 
 	deriveAddress = (publicKey: string): string => {
 		const publicKeyBytes = Convert.hex2ab(publicKey)
 		const checksum = blake2b(publicKeyBytes, undefined, 5).reverse()
-		const encoded = this.encodeNanoBase32(publicKeyBytes)
-		const encodedChecksum = this.encodeNanoBase32(checksum)
+		const encoded = this.encodeBananoBase32(publicKeyBytes)
+		const encodedChecksum = this.encodeBananoBase32(checksum)
 
 		return this.prefix + encoded + encodedChecksum
 	}
 
-	encodeNanoBase32 = (publicKey: Uint8Array): string => {
+	encodeBananoBase32 = (publicKey: Uint8Array): string => {
 		const length = publicKey.length
 		const leftover = (length * 8) % 5
 		const offset = leftover === 0 ? 0 : 5 - leftover
@@ -43,7 +43,7 @@ export default class NanoAddress {
 		return output
 	}
 
-	decodeNanoBase32 = (input: string): Uint8Array => {
+	decodeBananoBase32 = (input: string): Uint8Array => {
 		const length = input.length
 		const leftover = (length * 5) % 8
 		const offset = leftover === 0 ? 0 : 8 - leftover
@@ -75,13 +75,13 @@ export default class NanoAddress {
 	}
 
 	/**
-	 * Validates a Nano address with 'nano' and 'xrb' prefixes
+	 * Validates a Banano address with 'ban' prefix
 	 *
 	 * Derived from https://github.com/alecrios/nano-address-validator
 	 *
-	 * @param {string} address Nano address
+	 * @param {string} address Banano address
 	 */
-	validateNanoAddress = (address: string): boolean => {
+	validateBananoAddress = (address: string): boolean => {
 		if (address === undefined) {
 			throw Error('Address must be defined.')
 		}
@@ -90,7 +90,7 @@ export default class NanoAddress {
 			throw TypeError('Address must be a string.')
 		}
 
-		const allowedPrefixes: string[] = ['nano', 'xrb']
+		const allowedPrefixes: string[] = ['ban']
 		const pattern = new RegExp(
 			`^(${allowedPrefixes.join('|')})_[13]{1}[13456789abcdefghijkmnopqrstuwxyz]{59}$`,
 		)
@@ -101,9 +101,9 @@ export default class NanoAddress {
 
 		const expectedChecksum = address.slice(-8)
 		const publicKey = address.slice(address.indexOf('_') + 1, -8)
-		const publicKeyBuffer = this.decodeNanoBase32(publicKey)
+		const publicKeyBuffer = this.decodeBananoBase32(publicKey)
 		const actualChecksumBuffer = blake2b(publicKeyBuffer, null, 5).reverse()
-		const actualChecksum = this.encodeNanoBase32(actualChecksumBuffer)
+		const actualChecksum = this.encodeBananoBase32(actualChecksumBuffer)
 
 		return expectedChecksum === actualChecksum
 	}

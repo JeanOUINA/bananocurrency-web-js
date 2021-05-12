@@ -3,14 +3,14 @@ import BigNumber from 'bignumber.js'
 import { blake2b } from 'blakejs'
 
 import Ed25519 from './ed25519'
-import NanoAddress from './nano-address'
-import NanoConverter from './nano-converter'
+import BananoAddress from './banano-address'
+import BananoConverter from './banano-converter'
 import Signer from './signer'
 import Convert from './util/convert'
 
 export default class BlockSigner {
 
-	nanoAddress = new NanoAddress()
+	bananoAddress = new BananoAddress()
 	ed25519 = new Ed25519()
 	signer = new Signer()
 
@@ -33,11 +33,11 @@ export default class BlockSigner {
 			throw new Error('Invalid format in send amount')
 		}
 
-		if (!this.nanoAddress.validateNanoAddress(data.toAddress)) {
+		if (!this.bananoAddress.validateBananoAddress(data.toAddress)) {
 			throw new Error('Invalid toAddress')
 		}
 
-		if (!this.nanoAddress.validateNanoAddress(data.representativeAddress)) {
+		if (!this.bananoAddress.validateBananoAddress(data.representativeAddress)) {
 			throw new Error('Invalid representativeAddress')
 		}
 
@@ -53,14 +53,14 @@ export default class BlockSigner {
 			throw new Error('Please input the private key to sign the block')
 		}
 
-		const balanceNano = NanoConverter.convert(data.walletBalanceRaw, 'RAW', 'NANO')
-		const amountNano = NanoConverter.convert(data.amountRaw, 'RAW', 'NANO')
-		const newBalanceNano = new BigNumber(balanceNano).plus(new BigNumber(amountNano))
-		const newBalanceRaw = NanoConverter.convert(newBalanceNano, 'NANO', 'RAW')
+		const balanceBanano = BananoConverter.convert(data.walletBalanceRaw, 'RAW', 'BAN')
+		const amountBanano = BananoConverter.convert(data.amountRaw, 'RAW', 'BAN')
+		const newBalanceBanano = new BigNumber(balanceBanano).plus(new BigNumber(amountBanano))
+		const newBalanceRaw = BananoConverter.convert(newBalanceBanano, 'BAN', 'RAW')
 		const newBalanceHex = Convert.dec2hex(newBalanceRaw, 16).toUpperCase()
-		const account = this.nanoAddressToHexString(data.toAddress)
+		const account = this.bananoAddressToHexString(data.toAddress)
 		const link = data.transactionHash
-		const representative = this.nanoAddressToHexString(data.representativeAddress)
+		const representative = this.bananoAddressToHexString(data.representativeAddress)
 
 		const signature = this.signer.sign(
 				privateKey,
@@ -100,15 +100,15 @@ export default class BlockSigner {
 			throw new Error('Invalid format in send amount')
 		}
 
-		if (!this.nanoAddress.validateNanoAddress(data.toAddress)) {
+		if (!this.bananoAddress.validateBananoAddress(data.toAddress)) {
 			throw new Error('Invalid toAddress')
 		}
 
-		if (!this.nanoAddress.validateNanoAddress(data.fromAddress)) {
+		if (!this.bananoAddress.validateBananoAddress(data.fromAddress)) {
 			throw new Error('Invalid fromAddress')
 		}
 
-		if (!this.nanoAddress.validateNanoAddress(data.representativeAddress)) {
+		if (!this.bananoAddress.validateBananoAddress(data.representativeAddress)) {
 			throw new Error('Invalid representativeAddress')
 		}
 
@@ -120,14 +120,14 @@ export default class BlockSigner {
 			throw new Error('Please input the private key to sign the block')
 		}
 
-		const balanceNano = NanoConverter.convert(data.walletBalanceRaw, 'RAW', 'NANO')
-		const amountNano = NanoConverter.convert(data.amountRaw, 'RAW', 'NANO')
-		const newBalanceNano = new BigNumber(balanceNano).minus(new BigNumber(amountNano))
-		const newBalanceRaw = NanoConverter.convert(newBalanceNano, 'NANO', 'RAW')
+		const balanceBanano = BananoConverter.convert(data.walletBalanceRaw, 'RAW', 'BAN')
+		const amountBanano = BananoConverter.convert(data.amountRaw, 'RAW', 'BAN')
+		const newBalanceBanano = new BigNumber(balanceBanano).minus(new BigNumber(amountBanano))
+		const newBalanceRaw = BananoConverter.convert(newBalanceBanano, 'BAN', 'RAW')
 		const newBalanceHex = Convert.dec2hex(newBalanceRaw, 16).toUpperCase()
-		const account = this.nanoAddressToHexString(data.fromAddress)
-		const link = this.nanoAddressToHexString(data.toAddress)
-		const representative = this.nanoAddressToHexString(data.representativeAddress)
+		const account = this.bananoAddressToHexString(data.fromAddress)
+		const link = this.bananoAddressToHexString(data.toAddress)
+		const representative = this.bananoAddressToHexString(data.representativeAddress)
 
 		const signature = this.signer.sign(
 				privateKey,
@@ -150,12 +150,12 @@ export default class BlockSigner {
 		}
 	}
 
-	private nanoAddressToHexString(addr: string): string {
+	private bananoAddressToHexString(addr: string): string {
 		addr = addr.slice(-60)
 		const isValid = /^[13456789abcdefghijkmnopqrstuwxyz]+$/.test(addr)
 		if (isValid) {
-			const keyBytes = this.nanoAddress.decodeNanoBase32(addr.substring(0, 52))
-			const hashBytes = this.nanoAddress.decodeNanoBase32(addr.substring(52, 60))
+			const keyBytes = this.bananoAddress.decodeBananoBase32(addr.substring(0, 52))
+			const hashBytes = this.bananoAddress.decodeBananoBase32(addr.substring(52, 60))
 			const blakeHash = blake2b(keyBytes, undefined, 5).reverse()
 			if (Convert.ab2hex(hashBytes) == Convert.ab2hex(blakeHash)) {
 				const key = Convert.ab2hex(keyBytes).toUpperCase()

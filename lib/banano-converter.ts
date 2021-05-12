@@ -1,6 +1,6 @@
 import BigNumber from 'bignumber.js'
 
-export default class NanoConverter {
+export default class BananoConverter {
 
 	/**
 	 * Converts the input value to the wanted unit
@@ -16,32 +16,25 @@ export default class NanoConverter {
 			case 'RAW':
 				value = value
 				break
-			case 'NANO':
-			case 'MRAI':
-				value = value.shiftedBy(30)
+			case 'BAN':
+				value = value.shiftedBy(29)
 				break
-			case 'KRAI':
+			case 'BANOSHI':
 				value = value.shiftedBy(27)
 				break
-			case 'RAI':
-				value = value.shiftedBy(24)
-				break
 			default:
-				throw new Error(`Unkown input unit ${inputUnit}, expected one of the following: RAW, NANO, MRAI, KRAI, RAI`)
+				throw new Error(`Unkown input unit ${inputUnit}, expected one of the following: RAW, BAN, BANOSHI`)
 		}
 
 		switch (outputUnit) {
 			case 'RAW':
 				return value.toFixed(0)
-			case 'NANO':
-			case 'MRAI':
-				return value.shiftedBy(-30).toFixed(30, 1)
-			case 'KRAI':
+			case 'BAN':
+				return value.shiftedBy(-29).toFixed(29, 1)
+			case 'BANOSHI':
 				return value.shiftedBy(-27).toFixed(27, 1)
-			case 'RAI':
-				return value.shiftedBy(-24).toFixed(24, 1)
 			default:
-				throw new Error(`Unknown output unit ${outputUnit}, expected one of the following: RAW, NANO, MRAI, KRAI, RAI`)
+				throw new Error(`Unknown output unit ${outputUnit}, expected one of the following: RAW, BAN, BANOSHI`)
 		}
 	}
 

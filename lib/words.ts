@@ -1,5 +1,4 @@
 const words = [
-
 	'abandon',
 	'ability',
 	'able',
@@ -2047,8 +2046,7 @@ const words = [
 	'zebra',
 	'zero',
 	'zone',
-	'zoo',
-
+	'zoo'
 ]
 
 export default words
