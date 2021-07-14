@@ -58,9 +58,9 @@ export default class BlockSigner {
 		const newBalanceBanano = new BigNumber(balanceBanano).plus(new BigNumber(amountBanano))
 		const newBalanceRaw = BananoConverter.convert(newBalanceBanano, 'BAN', 'RAW')
 		const newBalanceHex = Convert.dec2hex(newBalanceRaw, 16).toUpperCase()
-		const account = this.bananoAddressToHexString(data.toAddress)
+		const account = this.bananoAddress.bananoAddressToHexString(data.toAddress)
 		const link = data.transactionHash
-		const representative = this.bananoAddressToHexString(data.representativeAddress)
+		const representative = this.bananoAddress.bananoAddressToHexString(data.representativeAddress)
 
 		const signature = this.signer.sign(
 				privateKey,
@@ -125,9 +125,9 @@ export default class BlockSigner {
 		const newBalanceBanano = new BigNumber(balanceBanano).minus(new BigNumber(amountBanano))
 		const newBalanceRaw = BananoConverter.convert(newBalanceBanano, 'BAN', 'RAW')
 		const newBalanceHex = Convert.dec2hex(newBalanceRaw, 16).toUpperCase()
-		const account = this.bananoAddressToHexString(data.fromAddress)
-		const link = this.bananoAddressToHexString(data.toAddress)
-		const representative = this.bananoAddressToHexString(data.representativeAddress)
+		const account = this.bananoAddress.bananoAddressToHexString(data.fromAddress)
+		const link = this.bananoAddress.bananoAddressToHexString(data.toAddress)
+		const representative = this.bananoAddress.bananoAddressToHexString(data.representativeAddress)
 
 		const signature = this.signer.sign(
 				privateKey,
@@ -149,24 +149,6 @@ export default class BlockSigner {
 			work: data.work || '',
 		}
 	}
-
-	private bananoAddressToHexString(addr: string): string {
-		addr = addr.slice(-60)
-		const isValid = /^[13456789abcdefghijkmnopqrstuwxyz]+$/.test(addr)
-		if (isValid) {
-			const keyBytes = this.bananoAddress.decodeBananoBase32(addr.substring(0, 52))
-			const hashBytes = this.bananoAddress.decodeBananoBase32(addr.substring(52, 60))
-			const blakeHash = blake2b(keyBytes, undefined, 5).reverse()
-			if (Convert.ab2hex(hashBytes) == Convert.ab2hex(blakeHash)) {
-				const key = Convert.ab2hex(keyBytes).toUpperCase()
-				return key
-			}
-			throw new Error('Checksum mismatch in address')
-		} else {
-			throw new Error('Illegal characters in address')
-		}
-	}
-
 }
 
 export interface ReceiveBlock {
@@ -197,13 +179,16 @@ export interface RepresentativeBlock {
 	work?: string
 }
 
-export interface SignedBlock {
+export interface SignedBlock extends BlockData {
 	type: 'state'
+	work?: string
+}
+
+export interface BlockData {
 	account: string
 	previous: string
 	representative: string
 	balance: string
 	link: string
 	signature: string
-	work: string
 }

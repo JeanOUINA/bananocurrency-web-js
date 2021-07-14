@@ -108,7 +108,24 @@ export default class BananoAddress {
 		return expectedChecksum === actualChecksum
 	}
 
-	readChar(char: string): number {
+	bananoAddressToHexString = (addr: string): string => {
+		addr = addr.slice(-60)
+		const isValid = /^[13456789abcdefghijkmnopqrstuwxyz]+$/.test(addr)
+		if (isValid) {
+			const keyBytes = this.decodeBananoBase32(addr.substring(0, 52))
+			const hashBytes = this.decodeBananoBase32(addr.substring(52, 60))
+			const blakeHash = blake2b(keyBytes, undefined, 5).reverse()
+			if (Convert.ab2hex(hashBytes) == Convert.ab2hex(blakeHash)) {
+				const key = Convert.ab2hex(keyBytes).toUpperCase()
+				return key
+			}
+			throw new Error('Checksum mismatch in address')
+		} else {
+			throw new Error('Illegal characters in address')
+		}
+	}
+
+	private readChar(char: string): number {
 		const idx = this.alphabet.indexOf(char)
 
 		if (idx === -1) {
